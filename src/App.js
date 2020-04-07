@@ -15,7 +15,7 @@ function App() {
   const [gameIsMounting, setGameIsMounting] = useState(true)
 
   useEffect(()=>{
-    document.body.addEventListener('keydown',(e)=>changeDirection(e.key))
+    document.body.addEventListener('keydown',(e)=>changeDirection(e.keyCode))
   },[])
   
   useEffect(()=>{
@@ -50,7 +50,7 @@ function App() {
       console.log('move')
     }
 
-    
+    return ()=>clearTimeout(idTimeMove)
   },[snakeBody])
 
   function move() {
@@ -105,14 +105,36 @@ function App() {
     })
   }
 
-  function changeDirection(direction) {
-    let pattern = /(?<=Arrow)\w+/
-    
-    let newDirection = pattern.exec(direction)
+  function addSegment() {
+    clearTimeout(idTimeMove)
+    let newTop = 2 * snakeBody[snakeBody.length - 1].top -  snakeBody[snakeBody.length - 2].top 
+    let newLeft = 2 * snakeBody[snakeBody.length - 1].left -  snakeBody[snakeBody.length - 2].left 
+    let segment = {left:newLeft,top:newTop}
+    setSnakeBody([...snakeBody,segment])
+  }
 
+  function changeDirection(dirNum ) {
+    let newDirection;
+    
+    switch(dirNum) {
+      case 37:
+        newDirection = 'left';
+        break;
+      case 38:
+        newDirection = 'up';
+        break;
+      case 39:
+        newDirection = 'right';
+        break;
+      case 40:
+        newDirection = 'down';
+        break;
+      default:
+        newDirection = undefined
+    }
+    
     if(newDirection){
-      if(direction!==newDirection && gameStatus===STARTED) {
-        newDirection = newDirection[0].toLowerCase()
+      if(gameStatus===STARTED) {
         clearTimeout(idTimeMove)
         setDirection(newDirection)
       }
@@ -124,7 +146,8 @@ function App() {
       <Board width = {'100vw'} height={'100vh'} />
       <Snake coords = {snakeBody} direction = {direction}/> 
       <button style={{position:'absolute', right:'5px', top:'8px'}} onClick = {play}>play</button>
-      <button style={{position:'absolute', right:'5px', top:'24px'}} onClick = {pause}>pause</button>
+      <button style={{position:'absolute', right:'5px', top:'30px'}} onClick = {pause}>pause</button>
+      <button style={{position:'absolute', right:'5px', top:'52px'}} onClick = {addSegment}>addseg</button>
     </div>
   );
 }
