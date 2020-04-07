@@ -1,0 +1,27 @@
+.controll-panel-container {
+    position: absolute;
+    left: 50%;
+    top: 10px;
+    background-color: darkblue;
+    border-radius: 15px;
+    transform: translate(-50%);
+    padding: 3px 3px 0;
+}
+
+.controll-panel-container button {
+    background-color: transparent;
+    border: none;
+    color: white;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.controll-panel-container button:hover {
+    color: yellow;
+}
+.controll-panel-container button:focus {
+    border:none;
+}
+
+.controll-panel-container button:last-child {
+    margin-right: 0;
+}

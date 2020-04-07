@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import Board from './components/board'
-import Snake from './components/snake'
+import Board from './components/board';
+import Snake from './components/snake';
+import ControllPanel from './components/controllPanel';
 
 import {STARTED,STOPED,PAUSED,OVER} from './js/constants.js'
 
@@ -169,9 +170,7 @@ function App() {
     <div className="App">
       <Board width = {'100vw'} height={'100vh'} />
       <Snake coords = {snakeBody} direction = {direction}/> 
-      <button style={{position:'absolute', right:'5px', top:'8px'}} onClick = {play}>play</button>
-      <button style={{position:'absolute', right:'5px', top:'30px'}} onClick = {pause}>pause</button>
-      <button style={{position:'absolute', right:'5px', top:'52px'}} onClick = {addSegment}>addseg</button>
+      <ControllPanel onPause={pause} onPlay={play} onStop={addSegment}/>
     </div>
   );
 }
