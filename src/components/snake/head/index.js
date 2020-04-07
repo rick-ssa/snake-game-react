@@ -5,7 +5,7 @@ import './style.css';
 
 export default function SnakeHead({direction, position}) {
    return (
-    <FaSmile style={position} className={`snake-head ${direction}`}
+    <FaSmile style={{left: position.left + 'px', top: position.top + 'px'}} className={`snake-head ${direction}`}
         size = {16}
     />
    )

@@ -5,7 +5,7 @@ import './style.css';
 
 export default function SnakeHead({position}) {
    return (
-    <FaSquare style = {position} className={`snake-segment`}
+    <FaSquare style = {{left: position.left + 'px', top: position.top + 'px'}} className={`snake-segment`}
         size = {16}
     />
    )
