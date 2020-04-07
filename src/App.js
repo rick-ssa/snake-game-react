@@ -7,7 +7,7 @@ import {STARTED,STOPED,PAUSED,OVER} from './js/constants.js'
 import './global.css'
 
 function App() {
-  const [snakeBody, setSnakeBody] = useState([{left:8,top:8},{left:8,top:24}]);
+  const [snakeBody, setSnakeBody] = useState([{left:8,top:8}]);
   const [direction, setDirection] = useState('right');
   const [velocity, setVelocity] = useState(100);
   const [idTimeMove, setIdTimeMove] = useState(0)
@@ -106,10 +106,34 @@ function App() {
   }
 
   function addSegment() {
-    clearTimeout(idTimeMove)
-    let newTop = 2 * snakeBody[snakeBody.length - 1].top -  snakeBody[snakeBody.length - 2].top 
-    let newLeft = 2 * snakeBody[snakeBody.length - 1].left -  snakeBody[snakeBody.length - 2].left 
-    let segment = {left:newLeft,top:newTop}
+    let newTop;
+    let newLeft;
+    let segment;
+    if(snakeBody.length > 1) {
+      clearTimeout(idTimeMove)
+      newTop = 2 * snakeBody[snakeBody.length - 1].top -  snakeBody[snakeBody.length - 2].top 
+      newLeft = 2 * snakeBody[snakeBody.length - 1].left -  snakeBody[snakeBody.length - 2].left 
+    } else {
+      switch(direction) {
+        case 'up':
+          newLeft = snakeBody[0].left
+          newTop = snakeBody[0].top + 16
+          break;
+        case 'right':
+          newLeft = snakeBody[0].left - 16
+          newTop = snakeBody[0].top
+          break;
+        case 'down':
+          newLeft = snakeBody[0].left
+          newTop = snakeBody[0].top - 16
+          break;
+        case 'left':
+          newLeft = snakeBody[0].left + 16
+          newTop = snakeBody[0].top
+          break;
+      }
+    }
+    segment = {left:newLeft,top:newTop}
     setSnakeBody([...snakeBody,segment])
   }
 
