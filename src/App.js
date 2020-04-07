@@ -1,24 +1,14 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Board from './components/board'
+import Snake from './components/snake'
+
+import './global.css'
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Board width = {'100vw'} height={'100vh'} />
+      <Snake coords = {[{left:'8px', top:'8px'},{left:'8px',top:'24px'}]} direction = 'left'/> 
     </div>
   );
 }
