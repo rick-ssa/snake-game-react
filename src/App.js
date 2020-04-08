@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Board from './components/board';
 import Snake from './components/snake';
 import ControllPanel from './components/controllPanel';
+import {snakeIsInTheArea} from './js/snakeFunctions'
 
 import {STARTED,STOPED,PAUSED,OVER} from './js/constants.js'
 
@@ -14,9 +15,26 @@ function App() {
   const [idTimeMove, setIdTimeMove] = useState(0)
   const [gameStatus,setGameStatus] = useState(STARTED)
   const [gameIsMounting, setGameIsMounting] = useState(true)
+  const [topPanelControl] = useState('10px')
+  const [areaInicialPanelControll, setAreaInicialPanelControll] = useState({})
 
   useEffect(()=>{
+    let panelControl = document.getElementById('controll-panel')
+    setAreaInicialPanelControll({
+      left: panelControl.offsetLeft, 
+      top: panelControl.offsetTop, 
+      width:panelControl.offsetWidth,
+      height: panelControl.offsetHeight
+    })
     document.body.addEventListener('keydown',(e)=>changeDirection(e.keyCode))
+    window.addEventListener('resize',()=>{
+      setAreaInicialPanelControll({
+        left: panelControl.offsetLeft, 
+        top: panelControl.offsetTop, 
+        width:panelControl.offsetWidth,
+        height: panelControl.offsetHeight
+      })
+    })
   },[])
   
   useEffect(()=>{
@@ -43,12 +61,24 @@ function App() {
         console.log('game is over')
         break;
     }
+
+    if(gameStatus!==STARTED) {
+      let panelControl = document.getElementById('controll-panel');
+      panelControl.style.top = '8px';
+    }
   },[gameStatus])
 
   useEffect(()=>{
+    let panelControl = document.getElementById('controll-panel')
+    
     if(gameStatus===STARTED) {
       setIdTimeMove(setTimeout(move,velocity))
-      console.log('move')
+      if(snakeIsInTheArea(snakeBody,areaInicialPanelControll, 51,0,20,20,5,20)) {
+        panelControl.style.top = '-32px'
+      } else {
+        panelControl.style.top = '8px'
+      }
+      // console.log('move')
     }
 
     return ()=>clearTimeout(idTimeMove)
@@ -170,7 +200,7 @@ function App() {
     <div className="App">
       <Board width = {'100vw'} height={'100vh'} />
       <Snake coords = {snakeBody} direction = {direction}/> 
-      <ControllPanel onPause={pause} onPlay={play} onStop={addSegment}/>
+      <ControllPanel top={topPanelControl} onPause={pause} onPlay={play} onStop={addSegment}/>
     </div>
   );
 }
