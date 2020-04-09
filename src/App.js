@@ -21,7 +21,7 @@ function App() {
   const [areaInicialPanelControll, setAreaInicialPanelControll] = useState({})
   const [minTimer, setMinTimer] = useState(4)
   const [maxTimer, setMaxTimer] = useState(12)
-  const [foodData, setFoodData] = useState({foodType: 'fish', foodSize: 17, foodColor: 'red', foodPosition:{left:808, top:40}})
+  const [foodData, setFoodData] = useState({foodType: 'apple', foodSize: 20, foodColor: 'red', foodPosition:{left:808, top:40}})
 
   useEffect(()=>{
     let panelControl = document.getElementById('controll-panel')
@@ -44,6 +44,7 @@ function App() {
     })
 
     runRandomFood()
+    console.log('mounted')
   },[])
 
   
@@ -82,16 +83,18 @@ function App() {
     let panelControl = document.getElementById('controll-panel')
     
     if(gameStatus===STARTED) {
-      setIdTimeMove(setTimeout(move,velocity))
       if(snakeIsInTheArea(snakeBody,areaInicialPanelControll, 51,0,20,20,5,20)) {
         panelControl.style.top = '-32px'
       } else {
         panelControl.style.top = '8px'
       }
 
+      clearTimeout(idTimeMove)
+      setIdTimeMove(setTimeout(move,velocity))
+
       if(snakeIsInTheArea(snakeBody,{left: foodData.foodPosition.left, top: foodData.foodPosition.top, width: foodData.foodSize, height: foodData.foodSize},0,0,-1,-1,-1,-1  )) {
-        clearTimeout(idTimeFood)
         addSegment()
+        clearTimeout(idTimeFood)
         runRandomFood()
       }
         
@@ -157,8 +160,9 @@ function App() {
     let newTop;
     let newLeft;
     let segment;
+    
+
     if(snakeBody.length > 1) {
-      clearTimeout(idTimeMove)
       newTop = 2 * snakeBody[snakeBody.length - 1].top -  snakeBody[snakeBody.length - 2].top 
       newLeft = 2 * snakeBody[snakeBody.length - 1].left -  snakeBody[snakeBody.length - 2].left 
     } else {
@@ -182,6 +186,8 @@ function App() {
       }
     }
     segment = {left:newLeft,top:newTop}
+    // console.log('addSegment', idTimeMove)
+    // clearTimeout(idTimeMove)
     setSnakeBody([...snakeBody,segment])
   }
 
@@ -215,7 +221,7 @@ function App() {
 
   function runRandomFood() {
     let time = Math.floor(Math.random() * (maxTimer - minTimer + 1) + minTimer) * 1000
-    let lft = Math.floor((Math.random() * 1200)/16) * 16 + 8
+    let lft = Math.floor((Math.random() * 800)/16) * 16 + 8
     let tp = Math.floor((Math.random() * 500)/16) * 16 + 8
     setFoodData({...foodData, foodPosition: {left: lft, top: tp}})
     setIdTimeFood(setTimeout(runRandomFood,time))
