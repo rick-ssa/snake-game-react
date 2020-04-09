@@ -12,7 +12,6 @@ export function snakeIsInTheArea(
         if(t===true) {
             return true
         }
-
         if(
             (point.left + offsetLeft >= area.left - marginLeft && point.left + offsetLeft  <= area.left + area.width + marginRight && 
             point.top + offsetTop >= area.top - marginTop && point.top + offsetTop <= area.top + area.height + marginBottom) ||

@@ -6,6 +6,7 @@
     transform: translate(-50%);
     padding: 3px 3px 0;
     transition: top 0.2s;
+    z-index: 2;
 }
 
 .controll-panel-container button {

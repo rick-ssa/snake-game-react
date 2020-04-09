@@ -2,7 +2,8 @@ import React, {useState, useEffect} from 'react';
 import Board from './components/board';
 import Snake from './components/snake';
 import ControllPanel from './components/controllPanel';
-import {snakeIsInTheArea} from './js/snakeFunctions'
+import {snakeIsInTheArea} from './js/snakeFunctions';
+import DisplayFood from   './components/displayFood'
 
 import {STARTED,STOPED,PAUSED,OVER} from './js/constants.js'
 
@@ -13,10 +14,14 @@ function App() {
   const [direction, setDirection] = useState('right');
   const [velocity, setVelocity] = useState(100);
   const [idTimeMove, setIdTimeMove] = useState(0)
+  const [idTimeFood, setIdTimeFood] = useState(0)
   const [gameStatus,setGameStatus] = useState(STARTED)
   const [gameIsMounting, setGameIsMounting] = useState(true)
   const [topPanelControl] = useState('10px')
   const [areaInicialPanelControll, setAreaInicialPanelControll] = useState({})
+  const [minTimer, setMinTimer] = useState(4)
+  const [maxTimer, setMaxTimer] = useState(12)
+  const [foodData, setFoodData] = useState({foodType: 'fish', foodSize: 17, foodColor: 'red', foodPosition:{left:808, top:40}})
 
   useEffect(()=>{
     let panelControl = document.getElementById('controll-panel')
@@ -26,7 +31,9 @@ function App() {
       width:panelControl.offsetWidth,
       height: panelControl.offsetHeight
     })
-    document.body.addEventListener('keydown',(e)=>changeDirection(e.keyCode))
+
+    document.body.addEventListener('keydown',(e)=>{e.preventDefault();changeDirection(e.keyCode)})
+    
     window.addEventListener('resize',()=>{
       setAreaInicialPanelControll({
         left: panelControl.offsetLeft, 
@@ -35,7 +42,10 @@ function App() {
         height: panelControl.offsetHeight
       })
     })
+
+    runRandomFood()
   },[])
+
   
   useEffect(()=>{
       if(!gameIsMounting){
@@ -78,7 +88,14 @@ function App() {
       } else {
         panelControl.style.top = '8px'
       }
-      // console.log('move')
+
+      if(snakeIsInTheArea(snakeBody,{left: foodData.foodPosition.left, top: foodData.foodPosition.top, width: foodData.foodSize, height: foodData.foodSize},0,0,-1,-1,-1,-1  )) {
+        clearTimeout(idTimeFood)
+        addSegment()
+        runRandomFood()
+      }
+        
+      console.log('move')
     }
 
     return ()=>clearTimeout(idTimeMove)
@@ -168,7 +185,7 @@ function App() {
     setSnakeBody([...snakeBody,segment])
   }
 
-  function changeDirection(dirNum ) {
+  function changeDirection(dirNum) {
     let newDirection;
     
     switch(dirNum) {
@@ -196,11 +213,20 @@ function App() {
     }
   }
 
+  function runRandomFood() {
+    let time = Math.floor(Math.random() * (maxTimer - minTimer + 1) + minTimer) * 1000
+    let lft = Math.floor((Math.random() * 1200)/16) * 16 + 8
+    let tp = Math.floor((Math.random() * 500)/16) * 16 + 8
+    setFoodData({...foodData, foodPosition: {left: lft, top: tp}})
+    setIdTimeFood(setTimeout(runRandomFood,time))
+  }
+
   return (
     <div className="App">
       <Board width = {'100vw'} height={'100vh'} />
       <Snake coords = {snakeBody} direction = {direction}/> 
-      <ControllPanel top={topPanelControl} onPause={pause} onPlay={play} onStop={addSegment}/>
+      <ControllPanel top={topPanelControl} onPause={pause} onPlay={play} onStop={()=>console.log('stop has pressed')}/>
+      <DisplayFood area = {{width: '1200px', height: '500px'}} size={foodData.foodSize} color = {foodData.foodColor} foodType = {foodData.foodType} position = {foodData.foodPosition} />
     </div>
   );
 }
