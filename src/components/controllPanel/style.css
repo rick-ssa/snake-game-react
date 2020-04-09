@@ -1,5 +1,6 @@
 .controll-panel-container {
     position: absolute;
+    display:flex;
     left: 50%;
     background-color: darkblue;
     border-radius: 15px;
@@ -7,6 +8,7 @@
     padding: 3px 3px 0;
     transition: top 0.2s;
     z-index: 2;
+    align-items: center;
 }
 
 .controll-panel-container button {
@@ -25,4 +27,16 @@
 
 .controll-panel-container button:last-child {
     margin-right: 0;
+}
+
+.controll-panel-container .score {
+    position: relative;
+    display: inline-block;
+    color: darkblue;
+    background-color: white;
+    font-size: 16px;
+    padding: 1px;
+    border-radius: 5px;
+    top: -2px;
+    margin-right: 2px;
 }

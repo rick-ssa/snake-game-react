@@ -3,7 +3,7 @@ import {FaPlayCircle, FaPauseCircle, FaStopCircle} from 'react-icons/fa'
 
 import './style.css';
 
-export default function ControllPanel({onPlay, onPause, onStop,top}) {
+export default function ControllPanel({onPlay, onPause, onStop,top,score}) {
     return (
         <div id='controll-panel' style={{top}} className="controll-panel-container">
             <button onClick = {onPlay} className="play">
@@ -15,6 +15,7 @@ export default function ControllPanel({onPlay, onPause, onStop,top}) {
             <button onClick = {onStop} className="stop">
                 <FaStopCircle size = {25}/>
             </button>
+            <span className = 'score'>{score}</span>
         </div>
     )
 }

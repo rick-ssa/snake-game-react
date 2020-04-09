@@ -3,7 +3,8 @@ import Board from './components/board';
 import Snake from './components/snake';
 import ControllPanel from './components/controllPanel';
 import {snakeIsInTheArea} from './js/snakeFunctions';
-import DisplayFood from   './components/displayFood'
+import DisplayFood from   './components/displayFood';
+import MessagePanel from './components/messagePanel';
 
 import {STARTED,STOPED,PAUSED,OVER} from './js/constants.js'
 
@@ -15,6 +16,7 @@ function App() {
   const [velocity, setVelocity] = useState(100);
   const [idTimeMove, setIdTimeMove] = useState(0)
   const [idTimeFood, setIdTimeFood] = useState(0)
+  const [idTimeImageOn, setIdTimeImageOn] = useState(0);
   const [gameStatus,setGameStatus] = useState(STARTED)
   const [gameIsMounting, setGameIsMounting] = useState(true)
   const [topPanelControl] = useState('10px')
@@ -22,6 +24,10 @@ function App() {
   const [minTimer, setMinTimer] = useState(4)
   const [maxTimer, setMaxTimer] = useState(12)
   const [foodData, setFoodData] = useState({foodType: 'apple', foodSize: 20, foodColor: 'red', foodPosition:{left:808, top:40}})
+  const [score, setScore] = useState(0)
+  const [stringScore, setStringScore] = useState(0)
+  const [messageOn, setMessageOn] = useState(false)
+  const [imageOn, setImageOn] = useState(false);
 
   useEffect(()=>{
     let panelControl = document.getElementById('controll-panel')
@@ -85,8 +91,10 @@ function App() {
     if(gameStatus===STARTED) {
       if(snakeIsInTheArea(snakeBody,areaInicialPanelControll, 51,0,20,20,5,20)) {
         panelControl.style.top = '-32px'
+        !messageOn && setMessageOn(true)
       } else {
         panelControl.style.top = '8px'
+        messageOn && setMessageOn(false)
       }
 
       clearTimeout(idTimeMove)
@@ -94,6 +102,9 @@ function App() {
 
       if(snakeIsInTheArea(snakeBody,{left: foodData.foodPosition.left, top: foodData.foodPosition.top, width: foodData.foodSize, height: foodData.foodSize},0,0,-1,-1,-1,-1  )) {
         addSegment()
+        setMessageOn(true)
+        handleShowImage()
+        setScore(score + 1)
         clearTimeout(idTimeFood)
         runRandomFood()
       }
@@ -103,6 +114,10 @@ function App() {
 
     return ()=>clearTimeout(idTimeMove)
   },[snakeBody])
+
+  useEffect(()=>{
+    formatScore()
+  },[score])
 
   function move() {
     let addLeft = 0;
@@ -133,6 +148,7 @@ function App() {
     if(gameStatus!==STARTED){
       setGameStatus(STARTED)
       move()
+      runRandomFood();
       console.log('play was invoked')
     }
   }
@@ -140,6 +156,7 @@ function App() {
   function pause() {
     if(gameStatus!==PAUSED){
       clearTimeout(idTimeMove)
+      clearTimeout(idTimeFood)
       setGameStatus(PAUSED)
       console.log('pause was invoked')
     }
@@ -186,8 +203,6 @@ function App() {
       }
     }
     segment = {left:newLeft,top:newTop}
-    // console.log('addSegment', idTimeMove)
-    // clearTimeout(idTimeMove)
     setSnakeBody([...snakeBody,segment])
   }
 
@@ -227,11 +242,29 @@ function App() {
     setIdTimeFood(setTimeout(runRandomFood,time))
   }
 
+  function formatScore () {
+    let strScore = score.toString()
+    let numZeros = 5 - strScore.length
+    
+    for(let i=0; i < numZeros; i++) {
+      strScore = '0' + strScore;
+    }
+
+    setStringScore(strScore)
+  }
+
+  function handleShowImage() {
+    setImageOn(true)
+    clearTimeout(setIdTimeImageOn)
+    setIdTimeImageOn(setTimeout(()=>setImageOn(false),800))
+  }
+
   return (
     <div className="App">
       <Board width = {'100vw'} height={'100vh'} />
+      <MessagePanel message = 'crtl + p = pause' showImage = {imageOn} textOn={messageOn}/>
       <Snake coords = {snakeBody} direction = {direction}/> 
-      <ControllPanel top={topPanelControl} onPause={pause} onPlay={play} onStop={()=>console.log('stop has pressed')}/>
+      <ControllPanel top={topPanelControl} score={stringScore} onPause={pause} onPlay={play} onStop={()=>console.log('stop has pressed')}/>
       <DisplayFood area = {{width: '1200px', height: '500px'}} size={foodData.foodSize} color = {foodData.foodColor} foodType = {foodData.foodType} position = {foodData.foodPosition} />
     </div>
   );
