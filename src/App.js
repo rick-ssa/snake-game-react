@@ -55,7 +55,7 @@ function App() {
 
   
   useEffect(()=>{
-      if(!gameIsMounting){
+      if(!gameIsMounting && gameStatus!==STOPED){
         move()
         console.log('changedirection')
       } else {
@@ -72,6 +72,9 @@ function App() {
         console.log('game is playing')
         break;
       case STOPED:
+        setSnakeBody([{left:8, top:8}])
+        setDirection('right')
+        setScore(0)
         console.log('game is stoped')
         break;
       default:
@@ -159,6 +162,15 @@ function App() {
       clearTimeout(idTimeFood)
       setGameStatus(PAUSED)
       console.log('pause was invoked')
+    }
+  }
+
+  function stop() {
+    if(gameStatus!==STOPED) {
+      clearTimeout(idTimeMove)
+      clearTimeout(idTimeFood)
+      setGameStatus(STOPED)
+      console.log('stoped was invoked')
     }
   }
 
@@ -261,11 +273,11 @@ function App() {
 
   return (
     <div className="App">
-      <Board width = {'100vw'} height={'100vh'} />
+      <Board width = {'100%'} height={'100vh'} />
       <MessagePanel message = 'crtl + p = pause' showImage = {imageOn} textOn={messageOn}/>
       <Snake coords = {snakeBody} direction = {direction}/> 
-      <ControllPanel top={topPanelControl} score={stringScore} onPause={pause} onPlay={play} onStop={()=>console.log('stop has pressed')}/>
-      <DisplayFood area = {{width: '1200px', height: '500px'}} size={foodData.foodSize} color = {foodData.foodColor} foodType = {foodData.foodType} position = {foodData.foodPosition} />
+      <ControllPanel top={topPanelControl} score={stringScore} onPause={pause} onPlay={play} onStop={stop}/>
+      <DisplayFood area = {{width: '100%', height: '100vh'}} size={foodData.foodSize} color = {foodData.foodColor} foodType = {foodData.foodType} position = {foodData.foodPosition} />
     </div>
   );
 }
