@@ -39,6 +39,7 @@ function App() {
     })
 
     document.body.addEventListener('keydown',(e)=>{e.preventDefault();changeDirection(e.keyCode)})
+
     
     window.addEventListener('resize',()=>{
       setAreaInicialPanelControll({
@@ -274,7 +275,7 @@ function App() {
   return (
     <div className="App">
       <Board width = {'100%'} height={'100vh'} />
-      <MessagePanel message = 'crtl + p = pause' showImage = {imageOn} textOn={messageOn}/>
+      <MessagePanel message = 'crtl + p = pause' showImage = {imageOn} textOn={false}/>
       <Snake coords = {snakeBody} direction = {direction}/> 
       <ControllPanel top={topPanelControl} score={stringScore} onPause={pause} onPlay={play} onStop={stop}/>
       <DisplayFood area = {{width: '100%', height: '100vh'}} size={foodData.foodSize} color = {foodData.foodColor} foodType = {foodData.foodType} position = {foodData.foodPosition} />
