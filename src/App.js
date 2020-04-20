@@ -9,6 +9,7 @@ import MessagePanel from './components/messagePanel';
 import {STARTED,STOPED,PAUSED,OVER} from './js/constants.js'
 
 import './global.css'
+import Brand from './components/brand';
 
 function App() {
   const [snakeBody, setSnakeBody] = useState([{left:8,top:8}]);
@@ -276,9 +277,10 @@ function App() {
     <div className="App">
       <Board width = {'100%'} height={'100vh'} />
       <MessagePanel message = 'crtl + p = pause' showImage = {imageOn} textOn={false}/>
+      <DisplayFood area = {{width: '100%', height: '100vh'}} size={foodData.foodSize} color = {foodData.foodColor} foodType = {foodData.foodType} position = {foodData.foodPosition} />
+      <Brand text="ricardosantos.me" href='https://ricardosantos.me'/>
       <Snake coords = {snakeBody} direction = {direction}/> 
       <ControllPanel top={topPanelControl} score={stringScore} onPause={pause} onPlay={play} onStop={stop}/>
-      <DisplayFood area = {{width: '100%', height: '100vh'}} size={foodData.foodSize} color = {foodData.foodColor} foodType = {foodData.foodType} position = {foodData.foodPosition} />
     </div>
   );
 }
