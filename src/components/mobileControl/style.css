@@ -1,0 +1,18 @@
+.container-mobilecontrol {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:100px;
+    height:100px;
+    background-color: black;    
+    border-radius: 50%;
+    padding: 0;
+    margin:0;
+    right: 16px;
+    bottom: 16px;
+    color: white;
+    font-size: 180px;
+    font-weight: 100;
+    overflow: hidden;
+}

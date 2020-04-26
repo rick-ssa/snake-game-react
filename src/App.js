@@ -5,11 +5,13 @@ import ControllPanel from './components/controllPanel';
 import {snakeIsInTheArea} from './js/snakeFunctions';
 import DisplayFood from   './components/displayFood';
 import MessagePanel from './components/messagePanel';
+import GameOverScreen from './components/gameOverScreen';
 
 import {STARTED,STOPED,PAUSED,OVER} from './js/constants.js'
 
 import './global.css'
 import Brand from './components/brand';
+import MobileControl from './components/mobileControl';
 
 function App() {
   const [snakeBody, setSnakeBody] = useState([{left:8,top:8}]);
@@ -104,7 +106,10 @@ function App() {
 
       clearTimeout(idTimeMove)
       setIdTimeMove(setTimeout(move,velocity))
-
+      if (selfColision()) {
+        setGameStatus(OVER)
+        clearTimeout(idTimeMove)
+      }
       if(snakeIsInTheArea(snakeBody,{left: foodData.foodPosition.left, top: foodData.foodPosition.top, width: foodData.foodSize, height: foodData.foodSize},0,0,-1,-1,-1,-1  )) {
         addSegment()
         setMessageOn(true)
@@ -273,6 +278,18 @@ function App() {
     setIdTimeImageOn(setTimeout(()=>setImageOn(false),800))
   }
 
+  function selfColision() {
+    return snakeBody.reduce((hasColide,segment,index,array)=>{
+      if(hasColide) return true
+
+      if(index) {
+        let head = array[0]
+        return head.top === segment.top && head.left === segment.left
+      }
+
+    },false)
+  }
+
   return (
     <div className="App">
       <Board width = {'100%'} height={'100vh'} />
@@ -281,6 +298,8 @@ function App() {
       <Brand text="ricardosantos.me" href='https://ricardosantos.me'/>
       <Snake coords = {snakeBody} direction = {direction}/> 
       <ControllPanel top={topPanelControl} score={stringScore} onPause={pause} onPlay={play} onStop={stop}/>
+      <MobileControl />
+      {gameStatus === OVER && <GameOverScreen onClick={stop}/>}
     </div>
   );
 }
