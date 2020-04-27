@@ -11,7 +11,6 @@ import {STARTED,STOPED,PAUSED,OVER} from './js/constants.js'
 
 import './global.css'
 import Brand from './components/brand';
-import MobileControl from './components/mobileControl';
 
 function App() {
   const [snakeBody, setSnakeBody] = useState([{left:8,top:8}]);
@@ -83,6 +82,7 @@ function App() {
         break;
       default:
         console.log('game is over')
+        clearTimeout(idTimeFood)
         break;
     }
 
@@ -298,7 +298,6 @@ function App() {
       <Brand text="ricardosantos.me" href='https://ricardosantos.me'/>
       <Snake coords = {snakeBody} direction = {direction}/> 
       <ControllPanel top={topPanelControl} score={stringScore} onPause={pause} onPlay={play} onStop={stop}/>
-      <MobileControl />
       {gameStatus === OVER && <GameOverScreen onClick={stop}/>}
     </div>
   );
