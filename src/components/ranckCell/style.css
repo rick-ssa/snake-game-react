@@ -1,0 +1,33 @@
+.rank-cells-container {
+    width: 100%;
+    padding:3px;
+    background-color: rgba(0,0,0,0.1);
+    display: flex;
+    margin: 3px 0;
+    border-radius: 35px;
+}
+
+.rank-cells-container img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+.rank-cells-container .text-container  {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-around;
+    padding-left:10px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.rank-cells-container .text-container .points {
+    color: red;
+    font-weight: bold;
+}
+
+.rank-cells-container .text-container .name {
+    color: navy;
+}

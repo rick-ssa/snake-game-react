@@ -11,6 +11,7 @@ import {STARTED,STOPED,PAUSED,OVER} from './js/constants.js'
 
 import './global.css'
 import Brand from './components/brand';
+import Rank from './components/rank/';
 
 function App() {
   const [snakeBody, setSnakeBody] = useState([{left:8,top:8}]);
@@ -25,7 +26,7 @@ function App() {
   const [areaInicialPanelControll, setAreaInicialPanelControll] = useState({})
   const [minTimer, setMinTimer] = useState(4)
   const [maxTimer, setMaxTimer] = useState(12)
-  const [foodData, setFoodData] = useState({foodType: 'apple', foodSize: 20, foodColor: 'red', foodPosition:{left:808, top:40}})
+  const [foodData, setFoodData] = useState({foodType: 'apple', foodSize: 16, foodColor: 'red', foodPosition:{left:808, top:40}})
   const [score, setScore] = useState(0)
   const [stringScore, setStringScore] = useState(0)
   const [messageOn, setMessageOn] = useState(false)
@@ -41,7 +42,6 @@ function App() {
     })
 
     document.body.addEventListener('keydown',(e)=>{e.preventDefault();changeDirection(e.keyCode)})
-
     
     window.addEventListener('resize',()=>{
       setAreaInicialPanelControll({
@@ -110,7 +110,7 @@ function App() {
         setGameStatus(OVER)
         clearTimeout(idTimeMove)
       }
-      if(snakeIsInTheArea(snakeBody,{left: foodData.foodPosition.left, top: foodData.foodPosition.top, width: foodData.foodSize, height: foodData.foodSize},0,0,-1,-1,-1,-1  )) {
+      if(hitFood(snakeBody[0],foodData)) {
         addSegment()
         setMessageOn(true)
         handleShowImage()
@@ -257,8 +257,28 @@ function App() {
     let time = Math.floor(Math.random() * (maxTimer - minTimer + 1) + minTimer) * 1000
     let lft = Math.floor((Math.random() * 800)/16) * 16 + 8
     let tp = Math.floor((Math.random() * 500)/16) * 16 + 8
+    while(isSnakeBodyArea({left:lft, top: tp})){
+      lft = Math.floor((Math.random() * 800)/16) * 16 + 8
+      tp = Math.floor((Math.random() * 500)/16) * 16 + 8
+    }
     setFoodData({...foodData, foodPosition: {left: lft, top: tp}})
     setIdTimeFood(setTimeout(runRandomFood,time))
+  }
+
+  function isSnakeBodyArea(position) {
+    return snakeBody.reduce((isBody,segment)=>{
+      if (isBody===true) return true
+      if(segment.left === position.left && segment.top === position.top) return true
+      return false
+    },false)
+  }
+
+  function hitFood(head,food){
+    if(head.left === food.foodPosition.left && head.top === food.foodPosition.top) {
+      return true
+    }
+
+    return false
   }
 
   function formatScore () {
@@ -298,6 +318,7 @@ function App() {
       <Brand text="ricardosantos.me" href='https://ricardosantos.me'/>
       <Snake coords = {snakeBody} direction = {direction}/> 
       <ControllPanel top={topPanelControl} score={stringScore} onPause={pause} onPlay={play} onStop={stop}/>
+      <Rank />
       {gameStatus === OVER && <GameOverScreen onClick={stop}/>}
     </div>
   );

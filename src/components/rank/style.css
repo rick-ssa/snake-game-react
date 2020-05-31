@@ -1,0 +1,29 @@
+.rank-container {
+    position: fixed;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(255,255,255,0.5);
+    right: -234px;
+    top:100px;
+    border-radius: 16px;
+    overflow-y: auto;
+    width:250px;
+    height:370px;
+    z-index: 3;
+    border-color:4px solid red;
+    transition: right 0.5s;
+    padding: 3px;
+}
+
+.rank-container:hover {
+    right: 0px;
+}
+
+.rank-container .title {
+    padding: 10px;
+    font-size: 24px;
+    color: brown;
+    font-family: 'Fredoka One', cursive;
+    letter-spacing: 3px;
+}
